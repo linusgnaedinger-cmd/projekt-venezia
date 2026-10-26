@@ -1,0 +1,1154 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Projekt Venezia · Linus Gnädinger</title>
+<meta name="description" content="M&A-Case-Study: KKR erwirbt 25 % an Enilive. DCF, WACC, Trading Comps, Precedent Transactions und Returns-Analyse von Linus Gnädinger.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: blaues Kopfband wie ein Pitchbook-Deckblatt, darunter ruhige Seiten auf Weiß/Grau, max. 1120px */
+:root {
+  --db-blue: #0018A8;     /* Deutsche-Bank-Blau */
+  --band: #0018A8;        /* Kopfband */
+  --band-fg: #FFFFFF;
+  --bg: #FFFFFF;
+  --surface: #F3F5F9;     /* Grau mit leichtem Blaustich */
+  --line: #D8DEE8;
+  --fg: #0B1433;
+  --muted: #5A6479;
+  --accent: #0018A8;
+  --accent-soft: #E6EAFA;
+  --todo-bg: #FFF1B8;
+  --todo-fg: #5C4700;
+  --ok: #1E7A4C; --warn: #A76200; --crit: #B3261E;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  --font-num: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --band: #0A1A8A; --band-fg: #FFFFFF;
+    --bg: #090E1C; --surface: #111933; --line: #253055;
+    --fg: #E8ECF6; --muted: #9AA4BD; --accent: #8EA0FF; --accent-soft: #1A2550;
+    --todo-bg: #4A3D08; --todo-fg: #FFE58A;
+    --ok: #5CC98F; --warn: #F0B04A; --crit: #FF8A80;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --band: #0A1A8A; --band-fg: #FFFFFF;
+  --bg: #090E1C; --surface: #111933; --line: #253055;
+  --fg: #E8ECF6; --muted: #9AA4BD; --accent: #8EA0FF; --accent-soft: #1A2550;
+  --todo-bg: #4A3D08; --todo-fg: #FFE58A;
+  --ok: #5CC98F; --warn: #F0B04A; --crit: #FF8A80;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 var(--font-body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--band); }
+a { color: var(--accent); }
+a:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3, h4 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.2; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* Kopfzeile */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--band); color: var(--band-fg); }
+.top-in { display: flex; align-items: center; gap: 24px; min-height: 56px; flex-wrap: wrap; padding-block: 8px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--band-fg); text-decoration: none; font-family: var(--font-display); font-weight: 600; font-size: 18px; letter-spacing: .02em; }
+#nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px; }
+#nav a { color: var(--band-fg); opacity: .78; text-decoration: none; padding-block: 4px; border-bottom: 2px solid transparent; }
+#nav a:hover { opacity: 1; }
+#nav a[aria-current="page"] { opacity: 1; border-bottom-color: var(--band-fg); }
+
+/* Landing */
+.hero { background: var(--band); color: var(--band-fg); }
+.hero-in { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 48px; align-items: center; padding-block: 56px 64px; }
+.hero h1 { font-size: clamp(34px, 5vw, 56px); font-weight: 600; letter-spacing: -.01em; margin-block: 10px 16px; }
+.hero .lead { font-size: 19px; max-width: 34em; margin: 0 0 12px; opacity: .92; }
+.hero .byline { font-size: 14px; opacity: .75; margin: 0 0 28px; }
+.eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; font-weight: 600; margin: 0; }
+.hero .eyebrow { opacity: .8; }
+.btn { display: inline-block; background: var(--band-fg); color: var(--db-blue); font-weight: 600; text-decoration: none; padding: 12px 22px; }
+.btn:hover { background: var(--accent-soft); }
+.btns { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn-ghost { background: transparent; color: var(--band-fg); box-shadow: inset 0 0 0 1.5px var(--band-fg); }
+.btn-ghost:hover { background: rgba(255,255,255,.12); }
+.panel.dl { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; }
+.panel.dl h3 { margin-top: 0; }
+.btn-dl { display: inline-block; background: var(--db-blue); color: #fff; font-weight: 600; text-decoration: none; padding: 12px 22px; white-space: nowrap; }
+.btn-dl:hover { opacity: .9; }
+.tombstone { background: #FFFFFF; color: #0B1433; padding: 28px 24px; text-align: center; border-top: 6px solid #0018A8; box-shadow: 0 18px 40px rgba(0, 0, 0, .25); }
+.tombstone p { margin: 0; }
+.ts-k { font-size: 11px; text-transform: uppercase; letter-spacing: .14em; color: #5A6479; margin-bottom: 18px !important; }
+.ts-buyer, .ts-target { font-family: var(--font-display); font-size: 26px; font-weight: 600; color: #0018A8; }
+.ts-mid { font-size: 13px; color: #5A6479; margin-block: 4px !important; }
+.ts-val { font-family: var(--font-num); font-size: 22px; margin-block: 18px !important; padding-block: 12px; border-block: 1px solid #D8DEE8; }
+.ts-role { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: #5A6479; }
+.ts-adv { font-weight: 600; margin-top: 2px !important; }
+.ts-date { font-size: 13px; color: #5A6479; margin-top: 10px !important; }
+
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-block: 40px; }
+.kpi { background: var(--bg); padding: 20px; display: flex; flex-direction: column; gap: 4px; }
+.kpi-v { font-family: var(--font-num); font-size: 24px; font-weight: 500; color: var(--accent); font-variant-numeric: tabular-nums; }
+.kpi-l { font-size: 13px; color: var(--muted); }
+.kpis-in { margin-block: 16px 8px; }
+
+.h-sec { font-size: 26px; margin-bottom: 16px; }
+.sec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-bottom: 64px; }
+.sec-card { position: relative; display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; padding: 20px 44px 20px 20px; background: var(--surface); text-decoration: none; color: var(--fg); border-left: 3px solid transparent; transition: border-color .15s, background .15s; }
+.sec-card:hover, .sec-card:focus-visible { border-left-color: var(--accent); background: var(--accent-soft); }
+.sec-nr { grid-row: span 2; font-family: var(--font-num); font-size: 22px; color: var(--accent); line-height: 1.2; }
+.sec-t { font-family: var(--font-display); font-weight: 600; font-size: 19px; }
+.sec-k { font-size: 14px; color: var(--muted); }
+.sec-go { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 20px; }
+
+/* Unterseiten */
+.page { padding-block: 32px 64px; }
+.crumb { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+.h-page { font-size: clamp(30px, 4vw, 44px); font-weight: 600; color: var(--accent); margin-bottom: 24px; padding-bottom: 14px; border-bottom: 2px solid var(--accent); }
+.h-sub { font-size: 21px; margin-block: 36px 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.h-co { font-size: 28px; margin-block: 4px 10px; color: var(--accent); }
+.panel h3 { font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.panel h4 { font-size: 17px; margin-bottom: 6px; }
+.panel p { margin: 0; }
+.prose { max-width: 68ch; margin: 0 0 24px; }
+.prose.big { font-size: 20px; line-height: 1.5; }
+.panel { background: var(--surface); padding: 20px; min-width: 0; }
+.panel .prose { margin-bottom: 16px; }
+.cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.stack { display: grid; gap: 16px; min-width: 0; align-content: start; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.min0 { min-width: 0; }
+
+.facts { margin: 0; display: grid; }
+.facts div { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 12px; padding-block: 8px; border-bottom: 1px solid var(--line); }
+.facts div:last-child { border-bottom: 0; }
+.facts dt { color: var(--muted); font-size: 14px; }
+.facts dd { margin: 0; font-weight: 500; }
+
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 8px 10px; border-bottom: 2px solid var(--accent); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.num td:not(:first-child), table.num th:not(:first-child) { text-align: right; font-family: var(--font-num); font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.sum td { font-weight: 600; border-top: 2px solid var(--fg); border-bottom: 0; }
+.sens td.base { background: var(--accent); color: var(--bg); font-weight: 600; }
+
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.timeline li { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; padding: 8px 0 8px 16px; border-left: 2px solid var(--accent); position: relative; }
+.timeline li::before { content: ""; position: absolute; left: -6px; top: 15px; width: 10px; height: 10px; background: var(--accent); }
+.tl-d { font-family: var(--font-num); font-size: 13px; color: var(--accent); padding-top: 2px; }
+
+.quotes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 32px; }
+blockquote { margin: 0; padding: 4px 0 4px 20px; border-left: 3px solid var(--accent); }
+blockquote p { font-family: var(--font-display); font-size: 19px; margin: 0 0 8px; }
+cite { font-style: normal; font-size: 14px; color: var(--muted); }
+
+.list { padding-left: 20px; max-width: 72ch; display: grid; gap: 8px; margin-block: 16px 24px; }
+.note { font-size: 14px; color: var(--muted); margin-top: 12px !important; }
+.quelle { font-size: 13px; color: var(--muted); margin-top: 32px; padding-top: 10px; border-top: 1px solid var(--line); }
+
+mark.todo { background: var(--todo-bg); color: var(--todo-fg); padding: 1px 6px; border-radius: 2px; font-weight: 500; }
+mark.todo::before { content: "Platzhalter: "; font-weight: 700; font-size: .85em; }
+.badge { font-family: var(--font-body); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; background: var(--todo-bg); color: var(--todo-fg); padding: 3px 8px; font-weight: 700; }
+
+.risk-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 6px; }
+.risk-h h4 { margin: 0; }
+.pill { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; padding: 2px 10px; border: 1.5px solid currentColor; }
+.pill.niedrig { color: var(--ok); } .pill.mittel { color: var(--warn); } .pill.hoch { color: var(--crit); }
+
+.own { display: flex; height: 52px; font-weight: 600; }
+.own-seg { display: flex; align-items: center; padding-inline: 14px; min-width: 0; white-space: nowrap; overflow: hidden; }
+.own-seg.s0 { background: var(--muted); color: var(--bg); }
+.own-seg.s1 { background: var(--accent); color: var(--bg); }
+
+.ff { width: 100%; min-width: 560px; height: auto; display: block; }
+.ff-grid { stroke: var(--line); stroke-width: 1; }
+.ff-tick, .ff-val { fill: var(--muted); font: 12px var(--font-num); }
+.ff-lab { fill: var(--fg); font: 600 13px var(--font-body); }
+.ff-bar { fill: var(--accent); fill-opacity: .85; }
+.ff-bar.ex { fill: var(--accent); fill-opacity: .25; stroke: var(--accent); stroke-dasharray: 4 3; }
+.ff-deal { stroke: var(--accent); stroke-width: 2.5; }
+.ff-dl { fill: var(--accent); font: 700 12px var(--font-num); }
+
+.pager { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 48px; padding-top: 20px; border-top: 2px solid var(--accent); }
+.pager a { font-weight: 600; text-decoration: none; }
+.pager a:hover { text-decoration: underline; }
+
+footer { background: var(--surface); color: var(--muted); font-size: 13px; }
+footer .wrap { padding-block: 24px; }
+
+@media (max-width: 820px) {
+  .hero-in, .cols, .grid-2, .quotes { grid-template-columns: minmax(0, 1fr); }
+  .hero-in { gap: 32px; padding-block: 40px 48px; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+
+/* Sprachumschalter */
+.lang { margin-left: auto; display: flex; gap: 2px; }
+.lang button { font: 600 12px var(--font-num); letter-spacing: .06em; color: var(--band-fg); background: transparent; border: 1.5px solid rgba(255,255,255,.55); padding: 4px 9px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--band-fg); color: var(--band); border-color: var(--band-fg); }
+.lang button:focus-visible { outline: 3px solid var(--band-fg); outline-offset: 2px; }
+
+/* Tabellen mit Kopfzeile */
+th.r, td.r { text-align: right; }
+td.n { font-family: var(--font-num); font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.em td { font-weight: 600; }
+table.grid td:first-child { min-width: 150px; }
+.stamp { display: inline-block; font: 600 11px var(--font-body); text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; white-space: nowrap; border: 1.5px solid currentColor; }
+.stamp.ante { color: var(--ok); }
+.stamp.post { color: var(--warn); }
+.lookback { border-left: 3px solid var(--warn); margin-block: 24px 16px; }
+.lookback h3 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.list.small { font-size: 14px; margin-top: 12px; }
+.note.top0 { margin-top: 0 !important; margin-bottom: 12px; }
+.cols.mt { margin-top: 32px; }
+@media (max-width: 820px) { .lang { margin-left: 0; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#start"><span id="brand">Projekt</span></a>
+    <nav id="nav" aria-label="Abschnitte"></nav>
+    <div id="lang" class="lang" role="group" aria-label="Sprache / Language"></div>
+  </div>
+</header>
+<main id="app"></main>
+<footer><div class="wrap" id="foot"></div></footer>
+<!-- ===== INHALTE: deutsche Texte in window.DEAL_DE, englische in window.DEAL_EN ===== -->
+<script>
+/* =====================================================================
+   DEAL-DATEN DEUTSCH  –  hier stehen alle deutschen Texte der Website.
+   Die englischen Texte stehen weiter unten in window.DEAL_EN.
+   ---------------------------------------------------------------------
+   • Texte stehen in "Anführungszeichen". Einfach überschreiben, aber
+     keinen Zeilenumbruch innerhalb eines Textes einfügen.
+   • Zahlen ohne Anführungszeichen, Dezimalpunkt statt Komma (z. B. 11.75).
+     Beträge in Mrd. EUR, sofern nicht anders angegeben.
+   • Zahlen bitte immer in DE und EN gleich ändern.
+   ===================================================================== */
+
+window.DEAL_DE = {
+
+  /* ---------- Allgemein ---------- */
+  meta: {
+    projektname: "Projekt Venezia",
+    titel: "KKR erwirbt 25 % an Enilive",
+    untertitel: "Rekonstruktion der Buy-Side-Beratung durch Deutsche Bank und UniCredit",
+    autor: "Linus Gnädinger",
+    anlass: "Deutsche Bank Spring Week Frankfurt",
+    stand: "Oktober 2026"
+  },
+
+  /* ---------- Landingpage: "Tombstone" (klassische Deal-Karte) ---------- */
+  tombstone: {
+    sektor: "Infrastructure / Energy Transition",
+    kaeufer: "KKR",
+    zeile1: "hat den Erwerb von",
+    ziel: "25 % an Enilive",
+    zeile2: "von Eni S.p.A. vereinbart",
+    wert: "€2,938 Mrd.",
+    rolle: "Financial Advisor to KKR",
+    datum: "Oktober 2024"
+  },
+
+  /* ---------- Landingpage: Kennzahlen-Leiste ---------- */
+  kennzahlen: [
+    { wert: "25 %",        label: "Erworbener Anteil" },
+    { wert: "€2,94 Mrd.",  label: "Transaktionswert" },
+    { wert: "€11,75 Mrd.", label: "Equity Value (100 %, post-money)" },
+    { wert: "9,4x",        label: "EV / EBITDA 2025E" }
+  ],
+
+  /* ---------- 1. Deal-Überblick ---------- */
+  ueberblick: {
+    zusammenfassung:
+      "Am 24. Oktober 2024 hat KKR eine Vereinbarung über den Erwerb einer Minderheitsbeteiligung von 25 % an Enilive unterzeichnet. Enilive bündelt Enis Mobilitätsgeschäft: Bioraffinerien, Biomethan, Smart Mobility (Enjoy Carsharing) und mehr als 5.000 Enilive-Tankstellen in Europa. KKR investiert über seine Global Infrastructure Strategy.",
+    eckdaten: [
+      ["Käufer", "KKR (Global Infrastructure Strategy)"],
+      ["Zielunternehmen", "Enilive S.p.A. (Tochter von Eni S.p.A.)"],
+      ["Verkäufer", "Eni S.p.A."],
+      ["Anteil", "25 % (Minderheitsbeteiligung)"],
+      ["Transaktionswert", "€2,938 Mrd."],
+      ["Equity Value 100 %", "€11,75 Mrd. (post-money)"],
+      ["Struktur", "€500 Mio. Kapitalerhöhung + €2,438 Mrd. Anteilskauf von Eni"],
+      ["Status", "Signing 24.10.2024, Closing 06.03.2025"]
+    ],
+    berater: [
+      { seite: "Buy-Side (KKR)",  finanz: "Deutsche Bank, UniCredit", recht: "Kirkland & Ellis, Gianni & Origoni" },
+      { seite: "Sell-Side (Eni)", finanz: "J.P. Morgan, Mediobanca", recht: "PedersoliGattai" }
+    ],
+    zeitplan: [
+      { datum: "14.03.2024", ereignis: "Eni kündigt an, Minderheiten an Enilive im Rahmen seines Satellitenmodells zu verkaufen" },
+      { datum: "23.07.2024", ereignis: "Eni gewährt KKR Exklusivität für Verhandlungen über 20–25 %" },
+      { datum: "24.10.2024", ereignis: "Signing: KKR erwirbt 25 % an Enilive für €2,938 Mrd." },
+      { datum: "18.02.2025", ereignis: "KKR stockt um 5 % für €587,5 Mio. auf 30 % auf, zur gleichen Bewertung" },
+      { datum: "vor Closing", ereignis: "Eni führt eine Kapitalerhöhung von €500 Mio. durch, damit Enilive schuldenfrei ist" },
+      { datum: "06.03.2025", ereignis: "Closing der 25 %: Eni erhält €2,967 Mrd. inkl. Cash-Anpassungen" },
+      { datum: "11.04.2025", ereignis: "Closing der weiteren 5 %: KKR zahlt rund €601 Mio. inkl. Anpassungen und hält nun 30 %" }
+    ],
+    quelle: "BSP.pdf; Pressemitteilungen von Eni (24.10.2024, 18.02.2025, 06.03.2025, 11.04.2025) und KKR via Business Wire / Nasdaq; Reuters; financecommunity.it (Berater)"
+  },
+
+  /* ---------- 2. Unternehmen ---------- */
+  unternehmen: [
+    {
+      name: "KKR",
+      rolle: "Käufer",
+      beschreibung:
+        "Globale Investmentgesellschaft mit über $510 Mrd. Assets under Management. KKR betreibt seit 2008 die Global Infrastructure Strategy und verwaltet darüber mehr als $73 Mrd. an Infrastruktur-Assets. In Italien investiert KKR seit 2005, zuletzt in das Festnetz von Telecom Italia (FiberCop).",
+      fakten: [
+        ["AuM gesamt", "> $510 Mrd."],
+        ["Private Equity", "$149 Mrd."],
+        ["Real Estate", "$75 Mrd."],
+        ["Credit", "$237 Mrd."],
+        ["Infrastruktur-AuM", "> $73 Mrd."],
+        ["Börsennotiz", "NYSE: KKR"]
+      ]
+    },
+    {
+      name: "Enilive",
+      rolle: "Zielunternehmen",
+      beschreibung:
+        "Enis Gesellschaft für die Transformation der Mobilität: Bioraffinerien (u. a. Venedig und Gela), Biomethan, HVO-Biokraftstoff (HVOlution), E-Ladeinfrastruktur, Enjoy Carsharing sowie Services wie Eni Café. Enilive ist ein zentraler Baustein auf Enis Weg zur Klimaneutralität bis 2050.",
+      fakten: [
+        ["Muttergesellschaft", "Eni S.p.A. (Italien)"],
+        ["Tankstellen", "> 5.000 in Europa"],
+        ["EBITDA 2024E", "ca. €1,0 Mrd."],
+        ["EBITDA 2025E", "ca. €1,2 Mrd."],
+        ["Ziel Bioraffinerie", "5 Mio. t Kapazität bis 2030"],
+        ["CEO", "Stefano Ballista"]
+      ]
+    }
+  ],
+  unternehmenQuelle: "BSP.pdf; KKR-Pressemitteilung 24.10.2024",
+
+  /* ---------- 3. Rationale & Synergien ---------- */
+  rationale: {
+    gruende: [
+      { titel: "Nachhaltiges Angebot ausbauen", text: "KKRs Kapital beschleunigt den Ausbau fortschrittlicher Biokraftstoffe und der E-Ladeinfrastruktur." },
+      { titel: "Marktposition in Europa", text: "KKR baut gezielt seine Präsenz in Italien aus, nach dem Erwerb des TIM-Festnetzes (FiberCop)." },
+      { titel: "Wachstum und Innovation", text: "Enilive kann mit KKRs Finanzkraft und Branchenerfahrung Produktentwicklung und Wettbewerbsposition stärken." },
+      { titel: "Sicht von Eni (Verkäufer)", text: "Enilive ist Teil von Enis Satellitenmodell: Transformationsgeschäfte werden eigenständig aufgestellt und Minderheiten an Finanzinvestoren verkauft. Eni realisiert so rund €3 Mrd., senkt die Kapitalbindung und behält mit 70 % die Kontrolle." }
+    ],
+    synergien: [
+      { bereich: "Technologie", text: "Datenanalyse aus KKR-Portfoliounternehmen zur Optimierung der E-Ladenetze." },
+      { bereich: "Operative Effizienz", text: "Transfer von Best Practices aus KKRs globalem Portfolio, Skaleneffekte." },
+      { bereich: "Nachhaltigkeit / F&E", text: "Gemeinsame Ressourcen für Forschung an nachhaltigen Kraftstoffen und Energiespeichern." }
+    ],
+    zitate: [
+      { text: "This agreement marks a significant milestone in our journey towards sustainable energy solutions.", von: "Claudio Descalzi, CEO Eni" },
+      { text: "We are thrilled to strategically partner with Eni on this investment in Enilive, a key player in advancing the energy transition.", von: "Alberto Signori, Partner, KKR European Infrastructure" }
+    ],
+    quelle: "BSP.pdf; KKR-Pressemitteilung 24.10.2024"
+  },
+
+  /* ---------- 4. Bewertung ---------- */
+  bewertung: {
+    dealEquityValue: 11.75,     // Mrd. EUR, 100 %, post-money
+    nettoverschuldung: -0.5,    // negativ = Netto-Cash (siehe bruecke)
+    ebitda2024: 1.0,
+    ebitda2025: 1.2,
+
+    // Informationsstand: was war beim Signing bekannt (ex ante), was nicht (ex post)
+    informationsstand: {
+      text: "Die Bewertung soll zeigen, was KKR beim Signing am 24.10.2024 wissen konnte. Wo öffentliche Daten von damals fehlen, nutze ich spätere Daten als Näherung und kennzeichne sie als ex post. Ex-post-Daten fließen nicht in mein Urteil zum Preis ein, sondern nur in den Rückblick.",
+      zeilen: [
+        ["Deal-Werte und Struktur", "Pressemitteilungen von Eni und KKR, 24.10.2024", "ex ante"],
+        ["DCF-Plan", "Eni Capital Markets Update (März 2024), EBITDA 2024 aus Enis Q3-Bericht 2024", "ex ante"],
+        ["WACC", "10-jährige BTP-Rendite vom 24.10.2024; Betas der Peers (Abruf 2026)", "ex ante, Betas als Näherung"],
+        ["Precedent Transactions", "Transaktionen aus 2022 und 2023", "ex ante"],
+        ["Trading Comps", "Marktdaten zum 31.12.2024, EBITDA 2024A/2025A statt Konsens vom Oktober 2024", "ex post (Näherung)"],
+        ["Returns-Analyse KKR", "gleicher Plan wie die DCF", "ex ante"],
+        ["EBITDA 2025 Ist (ca. €1,0 Mrd.)", "Enilive-Abschluss 2025, veröffentlicht im Mai 2026", "ex post (nur Rückblick)"]
+      ]
+    },
+
+    // Brücke von Equity Value zu Enterprise Value
+    bruecke: {
+      zeilen: [
+        ["Equity Value 100 % (post-money)", "11,75", "Eni-Pressemitteilung 24.10.2024"],
+        ["Nettoverschuldung vor dem Einstieg von KKR", "0,00", "Eni-Pressemitteilung: Eni führt vor Closing eine Kapitalerhöhung von €500 Mio. durch, „to set a debt-free company“"],
+        ["– Netto-Cash aus der KKR-Kapitalerhöhung", "–0,50", "Annahme: Die €500 Mio. Primary von KKR liegen zum Bewertungszeitpunkt noch als Cash im Unternehmen"],
+        ["= Enterprise Value", "11,25", "entspricht 9,4x EBITDA 2025E und 11,25x EBITDA 2024"]
+      ],
+      kommentar: "Die Netto-Cash-Annahme ist der wichtigste Hebel der Brücke. Ohne sie läge der Enterprise Value bei €11,75 Mrd., also 9,8x EBITDA 2025E, und der DCF-Equity-Value bei €13,71 statt €14,21 Mrd. Nicht berücksichtigt ist die Cash-Anpassung von rund €29 Mio. beim Closing (Eni erhielt €2,967 statt €2,938 Mrd.), weil ihre Zusammensetzung nicht veröffentlicht wurde."
+    },
+
+    dcf: {
+      jahre:  [2025, 2026, 2027, 2028, 2029, 2030],
+      fcf:    [0.446, 0.596, 0.766, 0.755, 0.825, 0.883],   // Unlevered FCF in Mrd. EUR, Base Case
+      wacc:   0.0756,
+      wachstum: 0.02,
+      kommentar: "Ex ante: Das EBITDA folgt bis 2027 dem Eni-Plan vom März 2024 (€1,2 Mrd. 2025, über €1,6 Mrd. 2027) und wächst danach mit 6 %, 5 % und 4 %. Abschreibungen 30 % des EBITDA, Steuern 27,9 %, Capex €0,5 Mrd. p. a. bis 2027, danach €0,6 Mrd. für den Ausbau auf 5 Mio. t. Ergebnis: Equity Value €14,2 Mrd., rund 21 % über dem Preis. Der Terminal Value macht 76 % des Werts aus."
+    },
+
+    // WACC-Herleitung: [Komponente, Wert, Herleitung / Quelle]
+    wacc: [
+      ["Risikofreier Zins", "3,45 %", "10-jährige italienische Staatsanleihe (BTP) am 24.10.2024"],
+      ["Marktrisikoprämie", "5,75 %", "Annahme im üblichen Bereich von 5–6 %"],
+      ["Unlevered Beta", "0,62", "Median der Peers: Neste 0,41, Darling 0,66, Couche-Tard 0,62"],
+      ["Ziel-Kapitalstruktur D / (D+E)", "20 %", "Annahme: heute schuldenfrei, langfristig moderate Verschuldung wie bei Infrastruktur üblich (D/E 25 %)"],
+      ["Steuersatz", "27,9 %", "IRES 24 % + IRAP 3,9 %"],
+      ["Relevered Beta", "0,73", "0,62 × (1 + (1 – 27,9 %) × 25 %)"],
+      ["Eigenkapitalkosten (CAPM)", "7,65 %", "3,45 % + 0,73 × 5,75 %"],
+      ["+ Risikozuschlag", "1,00 %", "für das Umsetzungsrisiko des Ausbaus, nur auf die Eigenkapitalkosten"],
+      ["= Eigenkapitalkosten", "8,65 %", ""],
+      ["Fremdkapitalkosten vor Steuern", "4,45 %", "BTP 3,45 % + Kreditaufschlag 1,0 % (Annahme)"],
+      ["Fremdkapitalkosten nach Steuern", "3,21 %", "4,45 % × (1 – 27,9 %)"],
+      ["WACC", "7,56 %", "80 % × 8,65 % + 20 % × 3,21 %"]
+    ],
+
+    trading: {
+      peers: [
+        { name: "Neste (Biokraftstoffe)", evEbitda: 7.9 },
+        { name: "Darling Ingredients (Biokraftstoffe, bereinigt)", evEbitda: 9.2 },
+        { name: "Alimentation Couche-Tard (Tankstellen)", evEbitda: 9.6 }
+      ],
+      kommentar: "Ex post (Näherung): Marktwerte zum 31.12.2024, EBITDA 2025A. Je Peer stehen EV und EBITDA in derselben Währung (Neste EUR, Darling und Couche-Tard USD), daher sind die Multiples vergleichbar. Darling ist bereinigt: Das Combined Adjusted EBITDA enthält 50 % des Joint Ventures Diamond Green Diesel, deshalb rechne ich auch 50 % der JV-Nettoverschuldung ($192 Mio.) in den EV ein (9,2x statt 9,0x). Galp wurde wegen des Upstream-Geschäfts ausgeschlossen (4,9x). Median 9,2x, gezahlt wurden 9,4x."
+    },
+
+    transaktionen: {
+      deals: [
+        { name: "Chevron / Renewable Energy Group", jahr: 2022, evEbitda: 9.6 },
+        { name: "Couche-Tard / TotalEnergies-Tankstellen", jahr: 2023, evEbitda: 6.2 },
+        { name: "EIP / Plenitude (Minderheit von Eni)", jahr: 2023, evEbitda: 10.8 }
+      ],
+      kommentar: "Ex ante: EV / EBITDA der letzten zwölf Monate zum Zeitpunkt der Transaktion. Biokraftstoffe, Tankstellen und ein Minderheitsverkauf aus Enis Satellitenmodell. Shell / Nature Energy und BP / Archaea wurden ausgeschlossen: kein veröffentlichtes EBITDA bzw. Hochlaufphase mit nicht aussagekräftigem Multiple (49x)."
+    },
+
+    // Returns-Analyse aus Sicht von KKR (25 %, Base Case)
+    returns: {
+      zeilen: [
+        ["Einstieg beim Closing (06.03.2025)", "–€2,94 Mrd.", "25 % für €2,938 Mrd."],
+        ["Ausschüttungen 2025–2030 (25 %)", "€0,53 Mrd.", "Annahme: 50 % des Free Cashflows werden ausgeschüttet, der Rest bleibt als Cash im Unternehmen"],
+        ["EBITDA 2030", "€1,85 Mrd.", "Base Case wie in der DCF"],
+        ["× Exit-Multiple", "9,4x", "Annahme: Exit zum Einstiegsmultiple, keine Multiple-Expansion"],
+        ["= Enterprise Value beim Exit (Ende 2030)", "€17,36 Mrd.", ""],
+        ["+ Netto-Cash beim Exit", "€2,64 Mrd.", "€0,5 Mrd. Start plus einbehaltene Cashflows"],
+        ["= Equity Value 100 %", "€20,00 Mrd.", ""],
+        ["Exit-Erlös KKR (25 %)", "€5,00 Mrd.", "ohne Fremdkapital auf Ebene von KKR"]
+      ],
+      szenarien: [
+        { name: "Downside", annahme: "EBITDA 2025 stagniert, danach 10 %, 10 %, 5 %, 4 %, 3 % Wachstum", irr: "5,4 %", moic: "1,34x" },
+        { name: "Base Case", annahme: "Eni-Plan bis 2027, danach 6 %, 5 %, 4 %", irr: "12,0 %", moic: "1,88x" },
+        { name: "Upside", annahme: "25 %, 18 %, 18 %, danach 8 %, 6 %, 5 % Wachstum", irr: "14,6 %", moic: "2,14x" }
+      ],
+      kommentar: "IRR taggenau berechnet (XIRR). Modelliert ist der ursprüngliche Anteil von 25 %, die Aufstockung auf 30 % zur gleichen Bewertung ändert die Rendite kaum. Alle Zahlen und Formeln stehen im Excel-Modell im Blatt Returns."
+    },
+
+    quelle: "Deal-Werte: Eni-Pressemitteilungen, BSP.pdf. WACC: Il Sole 24 Ore (BTP), stockanalysis.com (Betas). Peers: Geschäftsberichte, companiesmarketcap.com (31.12.2024). Transaktionen: Pressemitteilungen. Alle Details: Projekt_Venezia_Modell.xlsx."
+  },
+
+  /* ---------- 5. Struktur & Finanzierung ---------- */
+  struktur: {
+    mittelverwendung: [
+      { posten: "Kauf von Enilive-Anteilen von Eni (Secondary)", betrag: 2.438 },
+      { posten: "Zeichnung einer Kapitalerhöhung bei Enilive (Primary)", betrag: 0.500 }
+    ],
+    mittelherkunft: [
+      { posten: "Eigenkapital von KKR (Global Infrastructure Investors V) und Co-Investoren. Modellannahme: vollständig eigenkapitalfinanziert, die tatsächliche Aufteilung ist nicht veröffentlicht", betrag: 2.938 },
+      { posten: "Akquisitionsfinanzierung: UniCredit war mit einem Financing-Team beteiligt, die Höhe ist nicht veröffentlicht und daher im Modell nicht angesetzt", betrag: 0.0 }
+    ],
+    eigentum: [
+      { name: "Eni", anteil: 75 },
+      { name: "KKR", anteil: 25 }
+    ],
+    punkte: [
+      "Eni führt vor dem Closing eine Kapitalerhöhung von €500 Mio. durch, damit Enilive schuldenfrei ist.",
+      "Die €500 Mio. Primary-Kapital von KKR fließen ins Unternehmen und finanzieren Wachstum.",
+      "Die €2,438 Mrd. Secondary-Zahlung fließen an Eni.",
+      "Eni behält laut Pressemitteilung die Kontrolle und konsolidiert Enilive weiter voll, auch nach der Aufstockung von KKR auf 30 % (Closing am 11.04.2025, gleiche Bewertung von €11,75 Mrd.).",
+      "Der Gesellschaftervertrag wurde nicht veröffentlicht. Üblich bei Minderheitsbeteiligungen dieser Größe sind Sitze im Verwaltungsrat und Zustimmungsrechte bei wesentlichen Entscheidungen wie Businessplan, großen Investitionen, Dividendenpolitik und Kapitalmaßnahmen (Annahme).",
+      "Für den Exit von KKR sind nach einigen Jahren ein Verkauf an Dritte oder ein Börsengang typisch, abgesichert durch ein Mitverkaufsrecht (Tag-along), falls Eni selbst Anteile verkauft (Annahme)."
+    ],
+    quelle: "BSP.pdf; Pressemitteilungen von Eni (24.10.2024, 18.02.2025, 11.04.2025); financecommunity.it (UniCredit-Financing-Team). Finanzierungsstruktur von KKR und Governance-Details: eigene Annahmen"
+  },
+
+  /* ---------- 6. Risiken ---------- */
+  risiken: [
+    { titel: "Regulierung", stufe: "mittel", text: "Das Closing hängt von Genehmigungen ab. Strengere Umweltauflagen oder Markteingriffe in Italien könnten verzögern." },
+    { titel: "Umsetzung", stufe: "hoch", text: "Die Bioraffinerie-Kapazität soll sich bis 2026 mehr als verdoppeln und bis 2030 auf 5 Mio. t steigen. Das erfordert hohe Investitionen und starkes Projektmanagement." },
+    { titel: "Markt", stufe: "mittel", text: "Starker Wettbewerb, schneller technologischer Wandel und Preisdruck im Markt für erneuerbare Energien." },
+    { titel: "Geopolitik & Energiepreise", stufe: "mittel", text: "Schwankende Energiepreise können die Nachfrage nach nachhaltiger Mobilität dämpfen." },
+    { titel: "Integration", stufe: "niedrig", text: "Kulturelle oder strategische Differenzen zwischen KKR und Enilive könnten den Businessplan gefährden." }
+  ],
+  risikenQuelle: "BSP.pdf; Einstufung: eigene Einschätzung",
+
+  /* ---------- 7. Fazit ---------- */
+  fazit: {
+    kernaussage:
+      "Mein Urteil aus Sicht des Signings im Oktober 2024: Der Preis war fair, aber kein Schnäppchen. KKR hat mit 9,4x EV/EBITDA 2025E eine moderate Prämie für ein wachsendes Geschäft der Energiewende gezahlt. Ob sich der Deal lohnt, hängt vor allem davon ab, ob Enilive den Ausbau der Bioraffinerien bis 2030 wie geplant umsetzt.",
+    punkte: [
+      "Multiples: Der Median der börsennotierten Peers liegt bei 9,2x (Marktdaten 31.12.2024, also eine Näherung). Die leichte Prämie lässt sich mit dem höheren Wachstum und der seltenen Kombination aus Bioraffinerien und über 5.000 Tankstellen begründen. Vergleichbare Transaktionen (7,9x bis 10,2x, mittlere Hälfte) sprechen dagegen für einen Preis am oberen Ende.",
+      "DCF: Mein Modell ergibt €14,2 Mrd. Equity Value, rund 21 % über dem Preis. Allerdings stecken 76 % des Werts im Terminal Value, ein halber Prozentpunkt mehr oder weniger WACC verändert den Wert um €1,2 bis 1,4 Mrd., und ohne die Netto-Cash-Annahme wären es €0,5 Mrd. weniger. Ich sehe die DCF deshalb als Obergrenze und nicht als Beleg für einen günstigen Kauf.",
+      "Rendite für KKR: Im Base Case erzielt KKR 12,0 % IRR und das 1,9-Fache des eingesetzten Kapitals, im Downside nur 5,4 %. Das passt zu einem Infrastrukturfonds, der planbare Cashflows sucht, lässt aber wenig Puffer, wenn das Wachstum ausbleibt.",
+      "Klimatransformation: Enilive verarbeitet vor allem Abfälle und Reststoffe wie Altspeiseöl zu erneuerbarem Diesel (HVO) und nachhaltigem Flugkraftstoff (SAF). Für Lkw, Schiffe und Flugzeuge gibt es auf absehbare Zeit kaum Alternativen, und die EU schreibt mit ReFuelEU steigende SAF-Quoten vor (2 % ab 2025, 6 % ab 2030). Der Deal lenkt privates Kapital genau in diese Lücke.",
+      "Kritisch betrachtet: Biokraftstoffe sind nur so nachhaltig wie ihre Rohstoffe, und geeignete Reststoffe sind knapp. Ein großer Teil des Geschäfts sind außerdem weiterhin Tankstellen mit fossilen Kraftstoffen. Da die Nachfrage stark von politischen Quoten abhängt, kann eine geänderte Regulierung die Margen schnell verschieben.",
+      "Für Eni: Die Eni-Gruppe erhält insgesamt rund €3,6 Mrd., behält die Kontrolle und finanziert den Ausbau, ohne die eigene Bilanz zu belasten. Der Deal zeigt, wie ein Ölkonzern mit seinem Satellitenmodell Kapital für die Transformation beschafft.",
+      "Abwägung: Finanziell liegt der Preis innerhalb der Spanne meiner Methoden und eher an deren oberem Ende. Strategisch und gesellschaftlich ist der Deal sinnvoll, weil er Wachstum in einem Bereich finanziert, den die Klimaziele brauchen. Als Berater von KKR hätte ich den Deal empfohlen, aber auf Schutzrechte für den Fall gedrängt, dass der Ausbauplan verfehlt wird."
+    ],
+    rueckblick: "Nicht Teil meines Urteils: Das EBITDA 2025 lag mit rund €1,0 Mrd. unter dem Plan von €1,2 Mrd. Mit heutigem Wissen hat KKR damit 11,25x bezahlt. Diese Zahl kannte beim Signing niemand. Dass KKR schon im Februar 2025 zur gleichen Bewertung auf 30 % aufgestockt hat, zeigt aber, dass der Fonds auf die langfristige Entwicklung setzt und nicht auf ein einzelnes Jahr.",
+    learnings: "Ich habe gelernt, dass ein Kaufpreis erst durch mehrere Methoden greifbar wird: Die DCF zeigt den inneren Wert, Multiples zeigen den Markt, und beide können deutlich auseinanderliegen. Überrascht hat mich, wie stark Details das Ergebnis verändern, etwa die €500 Mio. Kapitalerhöhung, durch die Enterprise Value und Equity Value auseinanderfallen, ein halber Prozentpunkt beim WACC oder ein Joint Venture wie bei Darling, das ein Multiple verzerrt, wenn man es nicht bereinigt. Schwierig war, dass für ein nicht börsennotiertes Unternehmen kaum Daten öffentlich sind. Ich habe deshalb teilweise mit späteren Daten als Näherung gearbeitet und diese klar als ex post gekennzeichnet. Genau hier stoße ich als Außenstehender an Grenzen, und deshalb möchte ich an der Spring Week der Deutschen Bank in Frankfurt teilnehmen: Ich will sehen, wie ein Deal-Team solche Annahmen mit echten Daten prüft, wie Bewertung, Finanzierung und Beratung des Kunden zusammenspielen und wo meine Rekonstruktion von der Praxis abweicht. Langfristig sehe ich mich als Analyst im Investment Banking. Dort würde ich mit Zugang zu Datenraum, Konsensschätzungen und Management vor allem die Annahmen zu Kapazitätsausbau und Margen der Bioraffinerien tiefer prüfen und die Returns-Analyse um eine Finanzierung mit Fremdkapital erweitern."
+  }
+};
+
+/* =====================================================================
+   DEAL DATA ENGLISH  –  all English texts of the website.
+   Same structure as window.DEAL_DE above. Keep numbers identical.
+   ===================================================================== */
+
+window.DEAL_EN = {
+
+  meta: {
+    projektname: "Project Venezia",
+    titel: "KKR acquires 25% of Enilive",
+    untertitel: "Reconstruction of the buy-side advisory by Deutsche Bank and UniCredit",
+    autor: "Linus Gnädinger",
+    anlass: "Deutsche Bank Spring Week Frankfurt",
+    stand: "October 2026"
+  },
+
+  tombstone: {
+    sektor: "Infrastructure / Energy Transition",
+    kaeufer: "KKR",
+    zeile1: "has agreed to acquire",
+    ziel: "25% of Enilive",
+    zeile2: "from Eni S.p.A.",
+    wert: "€2.938bn",
+    rolle: "Financial Advisor to KKR",
+    datum: "October 2024"
+  },
+
+  kennzahlen: [
+    { wert: "25%",       label: "Stake acquired" },
+    { wert: "€2.94bn",   label: "Transaction value" },
+    { wert: "€11.75bn",  label: "Equity value (100%, post-money)" },
+    { wert: "9.4x",      label: "EV / EBITDA 2025E" }
+  ],
+
+  ueberblick: {
+    zusammenfassung:
+      "On 24 October 2024, KKR signed an agreement to acquire a 25% minority stake in Enilive. Enilive combines Eni's mobility business: biorefineries, biomethane, smart mobility (Enjoy car sharing) and more than 5,000 Enilive service stations across Europe. KKR invests through its Global Infrastructure Strategy.",
+    eckdaten: [
+      ["Buyer", "KKR (Global Infrastructure Strategy)"],
+      ["Target", "Enilive S.p.A. (subsidiary of Eni S.p.A.)"],
+      ["Seller", "Eni S.p.A."],
+      ["Stake", "25% (minority stake)"],
+      ["Transaction value", "€2.938bn"],
+      ["Equity value 100%", "€11.75bn (post-money)"],
+      ["Structure", "€500m capital increase + €2.438bn share purchase from Eni"],
+      ["Status", "Signing 24 Oct 2024, closing 6 Mar 2025"]
+    ],
+    berater: [
+      { seite: "Buy side (KKR)",  finanz: "Deutsche Bank, UniCredit", recht: "Kirkland & Ellis, Gianni & Origoni" },
+      { seite: "Sell side (Eni)", finanz: "J.P. Morgan, Mediobanca", recht: "PedersoliGattai" }
+    ],
+    zeitplan: [
+      { datum: "14 Mar 2024", ereignis: "Eni announces plans to sell minority stakes in Enilive as part of its satellite model" },
+      { datum: "23 Jul 2024", ereignis: "Eni grants KKR exclusivity for negotiations on a 20–25% stake" },
+      { datum: "24 Oct 2024", ereignis: "Signing: KKR acquires 25% of Enilive for €2.938bn" },
+      { datum: "18 Feb 2025", ereignis: "KKR agrees to buy a further 5% for €587.5m, reaching 30% at the same valuation" },
+      { datum: "Before closing", ereignis: "Eni carries out a €500m capital increase so that Enilive is debt-free" },
+      { datum: "6 Mar 2025", ereignis: "Closing of the 25%: Eni receives €2.967bn including cash adjustments" },
+      { datum: "11 Apr 2025", ereignis: "Closing of the further 5%: KKR pays about €601m including adjustments and now holds 30%" }
+    ],
+    quelle: "BSP.pdf; Eni press releases (24 Oct 2024, 18 Feb 2025, 6 Mar 2025, 11 Apr 2025) and KKR via Business Wire / Nasdaq; Reuters; financecommunity.it (advisors)"
+  },
+
+  unternehmen: [
+    {
+      name: "KKR",
+      rolle: "Buyer",
+      beschreibung:
+        "Global investment firm with more than $510bn in assets under management. KKR has run its Global Infrastructure Strategy since 2008 and manages more than $73bn in infrastructure assets through it. KKR has invested in Italy since 2005, most recently in Telecom Italia's fixed-line network (FiberCop).",
+      fakten: [
+        ["Total AuM", "> $510bn"],
+        ["Private equity", "$149bn"],
+        ["Real estate", "$75bn"],
+        ["Credit", "$237bn"],
+        ["Infrastructure AuM", "> $73bn"],
+        ["Listing", "NYSE: KKR"]
+      ]
+    },
+    {
+      name: "Enilive",
+      rolle: "Target",
+      beschreibung:
+        "Eni's company for the transformation of mobility: biorefineries (including Venice and Gela), biomethane, HVO biofuel (HVOlution), EV charging infrastructure, Enjoy car sharing and services such as Eni Café. Enilive is a central building block of Eni's path to carbon neutrality by 2050.",
+      fakten: [
+        ["Parent company", "Eni S.p.A. (Italy)"],
+        ["Service stations", "> 5,000 in Europe"],
+        ["EBITDA 2024E", "approx. €1.0bn"],
+        ["EBITDA 2025E", "approx. €1.2bn"],
+        ["Biorefining target", "5m t capacity by 2030"],
+        ["CEO", "Stefano Ballista"]
+      ]
+    }
+  ],
+  unternehmenQuelle: "BSP.pdf; KKR press release, 24 Oct 2024",
+
+  rationale: {
+    gruende: [
+      { titel: "Expanding the sustainable offering", text: "KKR's capital accelerates the build-out of advanced biofuels and EV charging infrastructure." },
+      { titel: "Market position in Europe", text: "KKR is deliberately expanding its presence in Italy, following the acquisition of TIM's fixed-line network (FiberCop)." },
+      { titel: "Growth and innovation", text: "With KKR's financial strength and industry experience, Enilive can strengthen product development and its competitive position." },
+      { titel: "Eni's perspective (seller)", text: "Enilive is part of Eni's satellite model: transition businesses are set up as stand-alone companies and minority stakes are sold to financial investors. Eni realises around €3bn, reduces capital employed and keeps control with 70%." }
+    ],
+    synergien: [
+      { bereich: "Technology", text: "Data analytics from KKR portfolio companies to optimise the EV charging network." },
+      { bereich: "Operational efficiency", text: "Transfer of best practices from KKR's global portfolio, economies of scale." },
+      { bereich: "Sustainability / R&D", text: "Shared resources for research into sustainable fuels and energy storage." }
+    ],
+    zitate: [
+      { text: "This agreement marks a significant milestone in our journey towards sustainable energy solutions.", von: "Claudio Descalzi, CEO Eni" },
+      { text: "We are thrilled to strategically partner with Eni on this investment in Enilive, a key player in advancing the energy transition.", von: "Alberto Signori, Partner, KKR European Infrastructure" }
+    ],
+    quelle: "BSP.pdf; KKR press release, 24 Oct 2024"
+  },
+
+  bewertung: {
+    dealEquityValue: 11.75,
+    nettoverschuldung: -0.5,
+    ebitda2024: 1.0,
+    ebitda2025: 1.2,
+
+    informationsstand: {
+      text: "The valuation aims to show what KKR could know at signing on 24 October 2024. Where public data from that time is missing, I use later data as a proxy and label it ex post. Ex-post data does not feed into my verdict on the price, only into the look-back.",
+      zeilen: [
+        ["Deal values and structure", "Eni and KKR press releases, 24 Oct 2024", "ex ante"],
+        ["DCF plan", "Eni Capital Markets Update (March 2024), 2024 EBITDA from Eni's Q3 2024 report", "ex ante"],
+        ["WACC", "10-year BTP yield on 24 Oct 2024; peer betas (retrieved 2026)", "ex ante, betas as a proxy"],
+        ["Precedent transactions", "Transactions from 2022 and 2023", "ex ante"],
+        ["Trading comps", "Market data as of 31 Dec 2024, EBITDA 2024A/2025A instead of October 2024 consensus", "ex post (proxy)"],
+        ["KKR returns analysis", "Same plan as the DCF", "ex ante"],
+        ["Actual 2025 EBITDA (approx. €1.0bn)", "Enilive 2025 financial statements, published May 2026", "ex post (look-back only)"]
+      ]
+    },
+
+    bruecke: {
+      zeilen: [
+        ["Equity value 100% (post-money)", "11.75", "Eni press release, 24 Oct 2024"],
+        ["Net debt before KKR's entry", "0.00", "Eni press release: before closing, Eni carries out a €500m capital increase “to set a debt-free company”"],
+        ["– Net cash from KKR's capital increase", "–0.50", "Assumption: KKR's €500m primary investment is still held as cash at the valuation date"],
+        ["= Enterprise value", "11.25", "equals 9.4x EBITDA 2025E and 11.25x EBITDA 2024"]
+      ],
+      kommentar: "The net cash assumption is the most important lever in the bridge. Without it, the enterprise value would be €11.75bn, i.e. 9.8x EBITDA 2025E, and the DCF equity value would be €13.71bn instead of €14.21bn. The cash adjustment of around €29m at closing (Eni received €2.967bn instead of €2.938bn) is not included because its composition was not disclosed."
+    },
+
+    dcf: {
+      jahre:  [2025, 2026, 2027, 2028, 2029, 2030],
+      fcf:    [0.446, 0.596, 0.766, 0.755, 0.825, 0.883],
+      wacc:   0.0756,
+      wachstum: 0.02,
+      kommentar: "Ex ante: EBITDA follows Eni's March 2024 plan up to 2027 (€1.2bn in 2025, over €1.6bn in 2027) and then grows by 6%, 5% and 4%. D&A at 30% of EBITDA, tax rate 27.9%, capex €0.5bn p.a. until 2027, then €0.6bn for the expansion to 5m t. Result: equity value of €14.2bn, around 21% above the price. The terminal value accounts for 76% of the value."
+    },
+
+    wacc: [
+      ["Risk-free rate", "3.45%", "10-year Italian government bond (BTP) on 24 Oct 2024"],
+      ["Market risk premium", "5.75%", "Assumption within the usual range of 5–6%"],
+      ["Unlevered beta", "0.62", "Peer median: Neste 0.41, Darling 0.66, Couche-Tard 0.62"],
+      ["Target capital structure D / (D+E)", "20%", "Assumption: debt-free today, moderate leverage in the long run as usual for infrastructure (D/E 25%)"],
+      ["Tax rate", "27.9%", "IRES 24% + IRAP 3.9%"],
+      ["Relevered beta", "0.73", "0.62 × (1 + (1 – 27.9%) × 25%)"],
+      ["Cost of equity (CAPM)", "7.65%", "3.45% + 0.73 × 5.75%"],
+      ["+ Risk premium", "1.00%", "for the execution risk of the expansion, applied to the cost of equity only"],
+      ["= Cost of equity", "8.65%", ""],
+      ["Pre-tax cost of debt", "4.45%", "BTP 3.45% + credit spread 1.0% (assumption)"],
+      ["After-tax cost of debt", "3.21%", "4.45% × (1 – 27.9%)"],
+      ["WACC", "7.56%", "80% × 8.65% + 20% × 3.21%"]
+    ],
+
+    trading: {
+      peers: [
+        { name: "Neste (biofuels)", evEbitda: 7.9 },
+        { name: "Darling Ingredients (biofuels, adjusted)", evEbitda: 9.2 },
+        { name: "Alimentation Couche-Tard (service stations)", evEbitda: 9.6 }
+      ],
+      kommentar: "Ex post (proxy): market values as of 31 Dec 2024, EBITDA 2025A. For each peer, EV and EBITDA are in the same currency (Neste EUR, Darling and Couche-Tard USD), so the multiples are comparable. Darling is adjusted: its combined adjusted EBITDA includes 50% of the Diamond Green Diesel joint venture, so I also add 50% of the JV's net debt ($192m) to EV (9.2x instead of 9.0x). Galp was excluded because of its upstream business (4.9x). Median 9.2x, price paid 9.4x."
+    },
+
+    transaktionen: {
+      deals: [
+        { name: "Chevron / Renewable Energy Group", jahr: 2022, evEbitda: 9.6 },
+        { name: "Couche-Tard / TotalEnergies stations", jahr: 2023, evEbitda: 6.2 },
+        { name: "EIP / Plenitude (minority stake from Eni)", jahr: 2023, evEbitda: 10.8 }
+      ],
+      kommentar: "Ex ante: EV / last-twelve-months EBITDA at the time of each transaction. Biofuels, service stations and a minority sale from Eni's satellite model. Shell / Nature Energy and BP / Archaea were excluded: no published EBITDA or a ramp-up phase with a meaningless multiple (49x)."
+    },
+
+    returns: {
+      zeilen: [
+        ["Entry at closing (6 Mar 2025)", "–€2.94bn", "25% for €2.938bn"],
+        ["Distributions 2025–2030 (25%)", "€0.53bn", "Assumption: 50% of free cash flow is paid out, the rest stays in the company as cash"],
+        ["EBITDA 2030", "€1.85bn", "Base case as in the DCF"],
+        ["× Exit multiple", "9.4x", "Assumption: exit at the entry multiple, no multiple expansion"],
+        ["= Enterprise value at exit (end of 2030)", "€17.36bn", ""],
+        ["+ Net cash at exit", "€2.64bn", "€0.5bn at the start plus retained cash flows"],
+        ["= Equity value 100%", "€20.00bn", ""],
+        ["KKR exit proceeds (25%)", "€5.00bn", "no debt financing at KKR level"]
+      ],
+      szenarien: [
+        { name: "Downside", annahme: "2025 EBITDA flat, then 10%, 10%, 5%, 4%, 3% growth", irr: "5.4%", moic: "1.34x" },
+        { name: "Base case", annahme: "Eni plan until 2027, then 6%, 5%, 4%", irr: "12.0%", moic: "1.88x" },
+        { name: "Upside", annahme: "25%, 18%, 18%, then 8%, 6%, 5% growth", irr: "14.6%", moic: "2.14x" }
+      ],
+      kommentar: "IRR calculated on exact dates (XIRR). The model covers the original 25% stake; the increase to 30% at the same valuation barely changes the return. All figures and formulas are in the Excel model on the Returns sheet (the model itself is in German)."
+    },
+
+    quelle: "Deal values: Eni press releases, BSP.pdf. WACC: Il Sole 24 Ore (BTP), stockanalysis.com (betas). Peers: annual reports, companiesmarketcap.com (31 Dec 2024). Transactions: press releases. All details: Projekt_Venezia_Modell.xlsx."
+  },
+
+  struktur: {
+    mittelverwendung: [
+      { posten: "Purchase of Enilive shares from Eni (secondary)", betrag: 2.438 },
+      { posten: "Subscription to a capital increase in Enilive (primary)", betrag: 0.500 }
+    ],
+    mittelherkunft: [
+      { posten: "Equity from KKR (Global Infrastructure Investors V) and co-investors. Model assumption: fully equity-financed, the actual split has not been disclosed", betrag: 2.938 },
+      { posten: "Acquisition financing: UniCredit was involved with a financing team; the amount has not been disclosed and is therefore not included in the model", betrag: 0.0 }
+    ],
+    eigentum: [
+      { name: "Eni", anteil: 75 },
+      { name: "KKR", anteil: 25 }
+    ],
+    punkte: [
+      "Before closing, Eni carries out a €500m capital increase so that Enilive is debt-free.",
+      "KKR's €500m of primary capital flows into the company and funds growth.",
+      "The €2.438bn secondary payment goes to Eni.",
+      "According to the press release, Eni keeps control and continues to fully consolidate Enilive, also after KKR's increase to 30% (closing on 11 Apr 2025, same valuation of €11.75bn).",
+      "The shareholders' agreement has not been published. Minority stakes of this size usually come with board seats and consent rights over key decisions such as the business plan, large investments, dividend policy and capital measures (assumption).",
+      "KKR's exit would typically be a sale to a third party or an IPO after several years, protected by a tag-along right in case Eni sells shares itself (assumption)."
+    ],
+    quelle: "BSP.pdf; Eni press releases (24 Oct 2024, 18 Feb 2025, 11 Apr 2025); financecommunity.it (UniCredit financing team). KKR's financing structure and governance details: own assumptions"
+  },
+
+  risiken: [
+    { titel: "Regulation", stufe: "mittel", text: "Closing depends on regulatory approvals. Stricter environmental rules or market interventions in Italy could cause delays." },
+    { titel: "Execution", stufe: "hoch", text: "Biorefining capacity is set to more than double by 2026 and to reach 5m t by 2030. This requires heavy investment and strong project management." },
+    { titel: "Market", stufe: "mittel", text: "Strong competition, rapid technological change and price pressure in the renewable energy market." },
+    { titel: "Geopolitics & energy prices", stufe: "mittel", text: "Volatile energy prices can dampen demand for sustainable mobility." },
+    { titel: "Integration", stufe: "niedrig", text: "Cultural or strategic differences between KKR and Enilive could put the business plan at risk." }
+  ],
+  risikenQuelle: "BSP.pdf; ratings: own assessment",
+
+  fazit: {
+    kernaussage:
+      "My verdict from the perspective of the signing in October 2024: the price was fair, but not a bargain. At 9.4x EV/EBITDA 2025E, KKR paid a moderate premium for a growing energy transition business. Whether the deal pays off depends above all on whether Enilive delivers the planned expansion of its biorefineries by 2030.",
+    punkte: [
+      "Multiples: the median of the listed peers is 9.2x (market data as of 31 Dec 2024, i.e. a proxy). The small premium can be justified by higher growth and the rare combination of biorefineries and more than 5,000 service stations. Comparable transactions (7.9x to 10.2x, middle half), on the other hand, point to a price at the upper end.",
+      "DCF: my model gives an equity value of €14.2bn, around 21% above the price. However, 76% of the value lies in the terminal value, half a percentage point more or less WACC changes the value by €1.2–1.4bn, and without the net cash assumption it would be €0.5bn lower. I therefore see the DCF as an upper bound rather than proof of a cheap purchase.",
+      "Returns for KKR: in the base case KKR earns a 12.0% IRR and 1.9 times its invested capital, in the downside only 5.4%. That suits an infrastructure fund looking for predictable cash flows, but leaves little buffer if growth falls short.",
+      "Climate transition: Enilive mainly processes waste and residues such as used cooking oil into renewable diesel (HVO) and sustainable aviation fuel (SAF). For trucks, ships and aircraft there are hardly any alternatives in the foreseeable future, and the EU's ReFuelEU regulation sets rising SAF quotas (2% from 2025, 6% from 2030). The deal channels private capital precisely into this gap.",
+      "A critical view: biofuels are only as sustainable as their feedstocks, and suitable residues are scarce. A large part of the business also remains service stations selling fossil fuels. Since demand depends heavily on political quotas, a change in regulation can shift margins quickly.",
+      "For Eni: the Eni group receives around €3.6bn in total, keeps control and funds the expansion without burdening its own balance sheet. The deal shows how an oil company can raise capital for the transition through its satellite model.",
+      "Weighing it up: financially, the price lies within the range of my methods and towards its upper end. Strategically and for society, the deal makes sense because it funds growth in an area that climate targets depend on. As KKR's advisor, I would have recommended the deal, but pushed for protective rights in case the expansion plan is missed."
+    ],
+    rueckblick: "Not part of my verdict: 2025 EBITDA came in at around €1.0bn, below the plan of €1.2bn. With today's knowledge, KKR therefore paid 11.25x. Nobody knew this figure at signing. The fact that KKR increased its stake to 30% at the same valuation as early as February 2025 shows, however, that the fund is betting on the long-term development rather than a single year.",
+    learnings: "I learned that a purchase price only becomes tangible through several methods: the DCF shows the intrinsic value, multiples show the market, and the two can differ significantly. I was surprised by how much details change the result, such as the €500m capital increase that separates enterprise value from equity value, half a percentage point of WACC, or a joint venture like Darling's that distorts a multiple if it is not adjusted for. The hard part was that hardly any data is public for an unlisted company. I therefore partly used later data as a proxy and clearly labelled it as ex post. This is exactly where I reach my limits as an outsider, and it is why I want to take part in the Deutsche Bank Spring Week in Frankfurt: I want to see how a deal team tests such assumptions with real data, how valuation, financing and client advice fit together, and where my reconstruction differs from practice. In the long term, I see myself as an analyst in investment banking. With access to a data room, consensus estimates and management, I would above all test the assumptions on capacity expansion and biorefinery margins in more depth and extend the returns analysis to include debt financing."
+  }
+};
+</script>
+<script>
+window.MODELL_XLSX = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,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";
+</script>
+<script>
+/* Rendert die Website aus window.DEAL_DE / window.DEAL_EN.
+   Inhalte bitte in den Datenblöcken ändern, nicht hier. */
+(function () {
+  var app = document.getElementById("app");
+  var D, L, lang;
+
+  /* ---------- Feste Texte der Oberfläche ---------- */
+  var UI = {
+    de: {
+      locale: "de-DE", bn: " Mrd.", pctSp: " %",
+      sections: [
+        ["ueberblick", "Deal-Überblick", "Eckdaten, Berater, Zeitplan"],
+        ["unternehmen", "Unternehmen", "Profile von KKR und Enilive"],
+        ["rationale", "Rationale & Synergien", "Warum der Deal Sinn ergibt"],
+        ["bewertung", "Bewertung", "DCF, WACC, Multiples, Returns"],
+        ["struktur", "Struktur & Finanzierung", "Sources & Uses, Governance"],
+        ["risiken", "Risiken", "Was schiefgehen kann"],
+        ["fazit", "Fazit", "Urteil und Learnings"]
+      ],
+      createdBy: "Erstellt von", forThe: "für die", asOf: "Stand",
+      start: "Präsentation starten", dlShort: "Excel-Modell herunterladen", contents: "Inhalt",
+      source: "Quelle", crumbOf: function (i, n) { return "Abschnitt " + i + " von " + n; }, home: "Zur Startseite",
+      side: "Seite", finAdv: "Finanzberater", legAdv: "Rechtsberater", keyFacts: "Eckdaten", advisors: "Berater", timeline: "Zeitplan",
+      reasons: "Strategische Gründe", synergies: "Erwartete Synergien", area: "Bereich", lever: "Hebel",
+      infoTitle: "Informationsstand: ex ante und ex post", block: "Baustein", basis: "Datenbasis", status: "Informationsstand",
+      implied: "Was KKR implizit bezahlt hat", evDeal: "Enterprise Value (Deal)", eqDcf: "Equity Value laut DCF",
+      bridgeTitle: "Brücke von Equity Value zu Enterprise Value", item: "Posten", eurBn: "Mrd. EUR", evidence: "Beleg / Annahme",
+      ffTitle: "Football Field: Equity Value 100 % in Mrd. EUR", ffDcf: "DCF (Sensitivität)",
+      ffComps: "Trading Comps × EBITDA 2025E", ffPx: "Transaktionen × EBITDA 2024",
+      ffNote: "DCF: Spanne der Sensitivitätstabelle. Multiples: mittlere Hälfte (25. bis 75. Perzentil) der Vergleichswerte, umgerechnet in Equity Value. Die blaue Linie ist der von KKR gezahlte Wert.",
+      fcf: "Free Cash Flow", df: "Diskontfaktor", pv: "Barwert",
+      sumPv: "Summe Barwerte FCF", tv: "Terminal Value (Gordon Growth)", pvTv: "Barwert Terminal Value", netDebt: "– Nettoverschuldung (negativ = Netto-Cash)",
+      assumptions: "Annahmen", perpetual: "ewiges Wachstum",
+      sensTitle: "Sensitivität: Equity Value in Mrd. EUR",
+      waccTitle: "WACC-Herleitung", component: "Komponente", value: "Wert", derivation: "Herleitung / Quelle",
+      company: "Unternehmen", transaction: "Transaktion", year: "Jahr",
+      retTitle: "Returns-Analyse aus Sicht von KKR (25 %, Base Case)", scenario: "Szenario", assumption: "Annahme",
+      dlTitle: "Das vollständige Bewertungsmodell",
+      dlText: "DCF mit Szenarien, WACC-Herleitung, Trading Comps, Precedent Transactions, Returns-Analyse für KKR und Football Field in Excel.",
+      dlBtn: "Excel-Modell herunterladen (.xlsx)",
+      uses: "Mittelverwendung (Uses)", sources: "Mittelherkunft (Sources)", total: "Summe",
+      ownership: "Eigentümerstruktur nach dem Closing am 06.03.2025 (seit 11.04.2025: Eni 70 %, KKR 30 %)", mechanics: "Mechanik und Governance",
+      risk: { niedrig: "niedrig", mittel: "mittel", hoch: "hoch" },
+      lookback: "Rückblick", learnings: "Learnings",
+      footer: "Unabhängige Rekonstruktion auf Basis öffentlicher Quellen, kein offizielles Material der Deutschen Bank."
+    },
+    en: {
+      locale: "en-GB", bn: "bn", pctSp: "%",
+      sections: [
+        ["ueberblick", "Deal overview", "Key facts, advisors, timeline"],
+        ["unternehmen", "Companies", "Profiles of KKR and Enilive"],
+        ["rationale", "Rationale & synergies", "Why the deal makes sense"],
+        ["bewertung", "Valuation", "DCF, WACC, multiples, returns"],
+        ["struktur", "Structure & financing", "Sources & uses, governance"],
+        ["risiken", "Risks", "What could go wrong"],
+        ["fazit", "Conclusion", "Verdict and learnings"]
+      ],
+      createdBy: "Prepared by", forThe: "for the", asOf: "As of",
+      start: "Start presentation", dlShort: "Download Excel model", contents: "Contents",
+      source: "Source", crumbOf: function (i, n) { return "Section " + i + " of " + n; }, home: "Back to start",
+      side: "Side", finAdv: "Financial advisors", legAdv: "Legal advisors", keyFacts: "Key facts", advisors: "Advisors", timeline: "Timeline",
+      reasons: "Strategic rationale", synergies: "Expected synergies", area: "Area", lever: "Lever",
+      infoTitle: "Information basis: ex ante and ex post", block: "Component", basis: "Data basis", status: "Information status",
+      implied: "What KKR implicitly paid", evDeal: "Enterprise value (deal)", eqDcf: "Equity value per DCF",
+      bridgeTitle: "Bridge from equity value to enterprise value", item: "Item", eurBn: "EUR bn", evidence: "Evidence / assumption",
+      ffTitle: "Football field: equity value 100% in EUR bn", ffDcf: "DCF (sensitivity)",
+      ffComps: "Trading comps × EBITDA 2025E", ffPx: "Transactions × EBITDA 2024",
+      ffNote: "DCF: range of the sensitivity table. Multiples: middle half (25th to 75th percentile) of the comparables, converted into equity value. The blue line is the value paid by KKR.",
+      fcf: "Free cash flow", df: "Discount factor", pv: "Present value",
+      sumPv: "Sum of PV of FCF", tv: "Terminal value (Gordon growth)", pvTv: "PV of terminal value", netDebt: "– Net debt (negative = net cash)",
+      assumptions: "Assumptions", perpetual: "perpetual growth",
+      sensTitle: "Sensitivity: equity value in EUR bn",
+      waccTitle: "WACC derivation", component: "Component", value: "Value", derivation: "Derivation / source",
+      company: "Company", transaction: "Transaction", year: "Year",
+      retTitle: "Returns analysis from KKR's perspective (25%, base case)", scenario: "Scenario", assumption: "Assumption",
+      dlTitle: "The full valuation model",
+      dlText: "DCF with scenarios, WACC derivation, trading comps, precedent transactions, KKR returns analysis and football field in Excel (labels in German).",
+      dlBtn: "Download Excel model (.xlsx)",
+      uses: "Uses of funds", sources: "Sources of funds", total: "Total",
+      ownership: "Ownership after closing on 6 Mar 2025 (since 11 Apr 2025: Eni 70%, KKR 30%)", mechanics: "Mechanics and governance",
+      risk: { niedrig: "low", mittel: "medium", hoch: "high" },
+      lookback: "Look-back", learnings: "Learnings",
+      footer: "Independent reconstruction based on public sources, not official Deutsche Bank material."
+    }
+  };
+
+  /* ---------- Helfer ---------- */
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  function t(s) { return esc(s == null ? "" : s); }
+  function num(x, d) { return x.toLocaleString(L.locale, { minimumFractionDigits: d, maximumFractionDigits: d }); }
+  function mrd(x, d) { return (x < 0 ? "–" : "") + "€" + num(Math.abs(x), d == null ? 2 : d) + L.bn; }
+  function pct(x, d) { return num(x * 100, d == null ? 1 : d) + L.pctSp; }
+  function modellLink(cls, text) {
+    return window.MODELL_XLSX ? '<a class="' + cls + '" href="' + window.MODELL_XLSX + '" download="Projekt_Venezia_Modell.xlsx">' + text + "</a>" : "";
+  }
+  function quelle(q) { return q ? '<p class="quelle">' + L.source + ": " + t(q) + "</p>" : ""; }
+  function facts(rows) {
+    return '<dl class="facts">' + rows.map(function (r) {
+      return "<div><dt>" + t(r[0]) + "</dt><dd>" + t(r[1]) + "</dd></div>";
+    }).join("") + "</dl>";
+  }
+  // Tabelle mit Kopfzeile; cls "num" setzt Zahlen rechtsbündig, numCols = Spalten mit Zahlen
+  function grid(head, rows, opts) {
+    opts = opts || {};
+    return '<div class="tbl-wrap"><table class="grid' + (opts.cls ? " " + opts.cls : "") + '"><thead><tr>' +
+      head.map(function (h, i) { return '<th class="' + ((opts.numCols || []).indexOf(i) >= 0 ? "r" : "") + '">' + t(h) + "</th>"; }).join("") +
+      "</tr></thead><tbody>" + rows.map(function (r, ri) {
+        var cls = (opts.boldRows || []).indexOf(ri) >= 0 ? ' class="em"' : "";
+        return "<tr" + cls + ">" + r.map(function (c, i) {
+          var isNum = (opts.numCols || []).indexOf(i) >= 0;
+          var html = opts.render && opts.render(c, i) || t(c);
+          return '<td class="' + (isNum ? "r n" : "") + '">' + html + "</td>";
+        }).join("") + "</tr>";
+      }).join("") + "</tbody></table></div>";
+  }
+  function stamp(s) {
+    var post = /post/.test(s);
+    return '<span class="stamp ' + (post ? "post" : "ante") + '">' + t(s) + "</span>";
+  }
+
+  /* ---------- Berechnungen ---------- */
+  function dcfValue(wacc, g) {
+    var c = D.bewertung.dcf, pv = 0;
+    c.fcf.forEach(function (f, i) { pv += f / Math.pow(1 + wacc, i + 1); });
+    var last = c.fcf[c.fcf.length - 1];
+    var tv = last * (1 + g) / (wacc - g);
+    var pvTv = tv / Math.pow(1 + wacc, c.fcf.length);
+    return { pvFcf: pv, tv: tv, pvTv: pvTv, ev: pv + pvTv, equity: pv + pvTv - D.bewertung.nettoverschuldung };
+  }
+  function quartile(a) {
+    var s = a.slice().sort(function (x, y) { return x - y; });
+    function p(q) { var i = (s.length - 1) * q, lo = Math.floor(i); return s[lo] + (s[Math.min(lo + 1, s.length - 1)] - s[lo]) * (i - lo); }
+    return [p(0.25), p(0.75)];
+  }
+
+  /* ---------- Abschnitte ---------- */
+  var RENDER = {
+    ueberblick: rUeberblick, unternehmen: rUnternehmen, rationale: rRationale, bewertung: rBewertung,
+    struktur: rStruktur, risiken: rRisiken, fazit: rFazit
+  };
+  function sections() {
+    return L.sections.map(function (s) { return { id: s[0], titel: s[1], kurz: s[2], render: RENDER[s[0]] }; });
+  }
+
+  function rLanding() {
+    var m = D.meta, SEC = sections();
+    var kz = D.kennzahlen.map(function (k) {
+      return '<div class="kpi"><span class="kpi-v">' + t(k.wert) + '</span><span class="kpi-l">' + t(k.label) + "</span></div>";
+    }).join("");
+    var cards = SEC.map(function (s, i) {
+      return '<a class="sec-card" href="#' + s.id + '"><span class="sec-nr">' + (i + 1) + '</span><span class="sec-t">' + esc(s.titel) +
+        '</span><span class="sec-k">' + esc(s.kurz) + '</span><span class="sec-go" aria-hidden="true">→</span></a>';
+    }).join("");
+    var adv = D.ueberblick.berater, ts = D.tombstone;
+    return '<section class="hero"><div class="wrap hero-in">' +
+      '<div class="hero-copy"><p class="eyebrow">' + t(m.projektname) + "</p>" +
+      "<h1>" + t(m.titel) + "</h1><p class=\"lead\">" + t(m.untertitel) + "</p>" +
+      '<p class="byline">' + L.createdBy + " " + t(m.autor) + " " + L.forThe + " " + t(m.anlass) + " · " + L.asOf + " " + t(m.stand) + "</p>" +
+      '<div class="btns"><a class="btn" href="#ueberblick">' + L.start + "</a>" + modellLink("btn btn-ghost", L.dlShort) + "</div></div>" +
+      '<aside class="tombstone" aria-label="Tombstone"><p class="ts-k">' + t(ts.sektor) + "</p>" +
+      '<p class="ts-buyer">' + t(ts.kaeufer) + '</p><p class="ts-mid">' + t(ts.zeile1) + '</p><p class="ts-target">' + t(ts.ziel) + "</p>" +
+      '<p class="ts-mid">' + t(ts.zeile2) + '</p><p class="ts-val">' + t(ts.wert) + "</p>" +
+      '<p class="ts-role">' + t(ts.rolle) + '</p><p class="ts-adv">' + t(adv[0].finanz) + '</p><p class="ts-date">' + t(ts.datum) + "</p></aside>" +
+      "</div></section>" +
+      '<section class="wrap"><div class="kpis">' + kz + "</div></section>" +
+      '<section class="wrap"><h2 class="h-sec">' + L.contents + '</h2><div class="sec-grid">' + cards + "</div></section>";
+  }
+
+  function rUeberblick() {
+    var u = D.ueberblick;
+    var adv = grid([L.side, L.finAdv, L.legAdv], u.berater.map(function (b) { return [b.seite, b.finanz, b.recht]; }));
+    var tl = '<ol class="timeline">' + u.zeitplan.map(function (z) {
+      return '<li><span class="tl-d">' + t(z.datum) + '</span><span class="tl-e">' + t(z.ereignis) + "</span></li>";
+    }).join("") + "</ol>";
+    return '<p class="prose">' + t(u.zusammenfassung) + "</p>" +
+      '<div class="cols"><div class="panel"><h3>' + L.keyFacts + "</h3>" + facts(u.eckdaten) + "</div>" +
+      '<div class="stack"><div class="panel min0"><h3>' + L.advisors + "</h3>" + adv + '</div><div class="panel"><h3>' + L.timeline + "</h3>" + tl + "</div></div></div>" +
+      quelle(u.quelle);
+  }
+
+  function rUnternehmen() {
+    return '<div class="cols">' + D.unternehmen.map(function (u) {
+      return '<div class="panel"><p class="eyebrow">' + t(u.rolle) + "</p><h3 class=\"h-co\">" + t(u.name) + '</h3><p class="prose">' + t(u.beschreibung) + "</p>" + facts(u.fakten) + "</div>";
+    }).join("") + "</div>" + quelle(D.unternehmenQuelle);
+  }
+
+  function rRationale() {
+    var r = D.rationale;
+    return '<h3 class="h-sub">' + L.reasons + '</h3><div class="grid-2">' + r.gruende.map(function (g) {
+      return '<div class="panel"><h4>' + t(g.titel) + "</h4><p>" + t(g.text) + "</p></div>";
+    }).join("") + '</div><h3 class="h-sub">' + L.synergies + "</h3>" +
+      grid([L.area, L.lever], r.synergien.map(function (s) { return [s.bereich, s.text]; })) +
+      '<div class="quotes">' + r.zitate.map(function (z) {
+        return "<blockquote><p>“" + t(z.text) + "”</p><cite>" + t(z.von) + "</cite></blockquote>";
+      }).join("") + "</div>" + quelle(r.quelle);
+  }
+
+  function rBewertung() {
+    var b = D.bewertung, c = b.dcf;
+    var base = dcfValue(c.wacc, c.wachstum);
+
+    // Informationsstand
+    var info = '<div class="panel"><p class="note top0">' + t(b.informationsstand.text) + "</p>" +
+      grid([L.block, L.basis, L.status], b.informationsstand.zeilen, { render: function (v, i) { return i === 2 ? stamp(v) : null; } }) + "</div>";
+
+    // Implizite Multiples und Brücke
+    var ev = b.dealEquityValue + b.nettoverschuldung;
+    var impl = '<div class="kpis kpis-in">' +
+      '<div class="kpi"><span class="kpi-v">' + mrd(ev) + '</span><span class="kpi-l">' + L.evDeal + "</span></div>" +
+      '<div class="kpi"><span class="kpi-v">' + num(ev / b.ebitda2024, 1) + 'x</span><span class="kpi-l">EV / EBITDA 2024</span></div>' +
+      '<div class="kpi"><span class="kpi-v">' + num(ev / b.ebitda2025, 1) + 'x</span><span class="kpi-l">EV / EBITDA 2025E</span></div>' +
+      '<div class="kpi"><span class="kpi-v">' + mrd(base.equity) + '</span><span class="kpi-l">' + L.eqDcf + "</span></div></div>";
+    var bridge = '<div class="panel">' + grid([L.item, L.eurBn, L.evidence], b.bruecke.zeilen, { numCols: [1], boldRows: [0, b.bruecke.zeilen.length - 1] }) +
+      '<p class="note">' + t(b.bruecke.kommentar) + "</p></div>";
+
+    // DCF-Tabelle
+    var head = "<th>" + L.eurBn + "</th>" + c.jahre.map(function (j) { return "<th>" + j + "E</th>"; }).join("");
+    var rowF = "<td>" + L.fcf + "</td>" + c.fcf.map(function (f) { return "<td>" + num(f, 2) + "</td>"; }).join("");
+    var rowD = "<td>" + L.df + "</td>" + c.fcf.map(function (f, i) { return "<td>" + num(1 / Math.pow(1 + c.wacc, i + 1), 3) + "</td>"; }).join("");
+    var rowP = "<td>" + L.pv + "</td>" + c.fcf.map(function (f, i) { return "<td>" + num(f / Math.pow(1 + c.wacc, i + 1), 2) + "</td>"; }).join("");
+    var dcfT = '<div class="tbl-wrap"><table class="num"><thead><tr>' + head + "</tr></thead><tbody><tr>" + rowF + "</tr><tr>" + rowD + "</tr><tr>" + rowP + "</tr></tbody></table></div>";
+    var dcfBridge = facts([
+      [L.sumPv, mrd(base.pvFcf)],
+      [L.tv, mrd(base.tv)],
+      [L.pvTv, mrd(base.pvTv)],
+      ["Enterprise Value", mrd(base.ev)],
+      [L.netDebt, mrd(b.nettoverschuldung)],
+      ["Equity Value", mrd(base.equity)],
+      [L.assumptions, "WACC " + pct(c.wacc, 2) + ", " + L.perpetual + " " + pct(c.wachstum)]
+    ]);
+
+    // Sensitivität
+    var waccs = [-0.01, -0.005, 0, 0.005, 0.01].map(function (d) { return c.wacc + d; });
+    var gs = [-0.005, 0, 0.005].map(function (d) { return c.wachstum + d; });
+    var all = [];
+    var sens = '<div class="tbl-wrap"><table class="num sens"><thead><tr><th>WACC ↓ / g →</th>' + gs.map(function (g) { return "<th>" + pct(g) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+      waccs.map(function (w) {
+        return "<tr><td>" + pct(w, 2) + "</td>" + gs.map(function (g) {
+          var v = dcfValue(w, g).equity; all.push(v);
+          var isBase = Math.abs(w - c.wacc) < 1e-9 && Math.abs(g - c.wachstum) < 1e-9;
+          return '<td class="' + (isBase ? "base" : "") + '">' + num(v, 1) + "</td>";
+        }).join("") + "</tr>";
+      }).join("") + "</tbody></table></div>";
+
+    // WACC
+    var wacc = grid([L.component, L.value, L.derivation], b.wacc, { numCols: [1], boldRows: [8, b.wacc.length - 1] });
+
+    // Multiples
+    var tr = b.trading, px = b.transaktionen;
+    var trR = quartile(tr.peers.map(function (p) { return p.evEbitda; }));
+    var pxR = quartile(px.deals.map(function (p) { return p.evEbitda; }));
+    var compT = grid([L.company, "EV / EBITDA"], tr.peers.map(function (p) { return [p.name, num(p.evEbitda, 1) + "x"]; }), { numCols: [1] });
+    var pxT = grid([L.transaction, L.year, "EV / EBITDA"], px.deals.map(function (p) { return [p.name, String(p.jahr), num(p.evEbitda, 1) + "x"]; }), { numCols: [1, 2] });
+
+    var ff = football([
+      { label: L.ffDcf, lo: Math.min.apply(null, all), hi: Math.max.apply(null, all) },
+      { label: L.ffComps, lo: trR[0] * b.ebitda2025 - b.nettoverschuldung, hi: trR[1] * b.ebitda2025 - b.nettoverschuldung },
+      { label: L.ffPx, lo: pxR[0] * b.ebitda2024 - b.nettoverschuldung, hi: pxR[1] * b.ebitda2024 - b.nettoverschuldung }
+    ], b.dealEquityValue);
+
+    // Returns
+    var r = b.returns;
+    var ret = '<div class="stack"><div class="panel min0">' + grid([L.item, L.value, L.assumption], r.zeilen, { numCols: [1], boldRows: [r.zeilen.length - 1] }) + "</div>" +
+      '<div class="panel min0">' + grid([L.scenario, "IRR", "MOIC"], r.szenarien.map(function (s) { return [s.name, s.irr, s.moic]; }), { numCols: [1, 2], boldRows: [1] }) +
+      '<ul class="list small">' + r.szenarien.map(function (s) { return "<li><b>" + t(s.name) + ":</b> " + t(s.annahme) + "</li>"; }).join("") + "</ul>" +
+      '<p class="note">' + t(r.kommentar) + "</p></div></div>";
+
+    return '<h3 class="h-sub">' + L.infoTitle + "</h3>" + info +
+      '<h3 class="h-sub">' + L.implied + "</h3>" + impl +
+      '<h3 class="h-sub">' + L.bridgeTitle + "</h3>" + bridge +
+      '<h3 class="h-sub">' + L.ffTitle + '</h3><div class="panel">' + ff + "</div>" +
+      '<h3 class="h-sub">Discounted Cash Flow</h3><div class="cols"><div class="panel min0">' + dcfT + '<p class="note">' + t(c.kommentar) + "</p></div>" +
+      '<div class="panel">' + dcfBridge + "</div></div>" +
+      '<h3 class="h-sub">' + L.sensTitle + '</h3><div class="panel">' + sens + "</div>" +
+      '<h3 class="h-sub">' + L.waccTitle + '</h3><div class="panel">' + wacc + "</div>" +
+      '<div class="cols mt"><div class="panel min0"><h3>Trading Comparables</h3>' + compT + '<p class="note">' + t(tr.kommentar) + "</p></div>" +
+      '<div class="panel min0"><h3>Precedent Transactions</h3>' + pxT + '<p class="note">' + t(px.kommentar) + "</p></div></div>" +
+      '<h3 class="h-sub">' + L.retTitle + "</h3>" + ret +
+      '<div class="panel dl"><div><h3>' + L.dlTitle + '</h3><p class="note">' + L.dlText + "</p></div>" +
+      modellLink("btn-dl", L.dlBtn) + "</div>" +
+      quelle(b.quelle);
+  }
+
+  function football(rows, deal) {
+    var vals = [deal]; rows.forEach(function (r) { vals.push(r.lo, r.hi); });
+    var min = Math.floor(Math.min.apply(null, vals) / 2) * 2, max = Math.ceil(Math.max.apply(null, vals) / 2) * 2;
+    if (max - min < 4) max = min + 4;
+    var W = 760, Lw = 250, R = 24, rowH = 46, top = 16, H = top + rows.length * rowH + 40;
+    function x(v) { return Lw + (v - min) / (max - min) * (W - Lw - R); }
+    var s = '<div class="tbl-wrap"><svg class="ff" viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Football Field">';
+    for (var v = min; v <= max; v += 2) {
+      s += '<line class="ff-grid" x1="' + x(v) + '" x2="' + x(v) + '" y1="' + top + '" y2="' + (H - 30) + '"/>' +
+        '<text class="ff-tick" x="' + x(v) + '" y="' + (H - 12) + '" text-anchor="middle">' + v + "</text>";
+    }
+    rows.forEach(function (r, i) {
+      var y = top + i * rowH + 8;
+      s += '<text class="ff-lab" x="0" y="' + (y + 19) + '">' + esc(r.label) + "</text>" +
+        '<rect class="ff-bar" x="' + x(r.lo) + '" y="' + y + '" width="' + Math.max(2, x(r.hi) - x(r.lo)) + '" height="28" rx="2"/>' +
+        '<text class="ff-val" x="' + (x(r.lo) - 6) + '" y="' + (y + 19) + '" text-anchor="end">' + num(r.lo, 1) + "</text>" +
+        '<text class="ff-val" x="' + (x(r.hi) + 6) + '" y="' + (y + 19) + '">' + num(r.hi, 1) + "</text>";
+    });
+    s += '<line class="ff-deal" x1="' + x(deal) + '" x2="' + x(deal) + '" y1="' + (top - 6) + '" y2="' + (H - 30) + '"/>' +
+      '<text class="ff-dl" x="' + (x(deal) + 6) + '" y="' + (top + 2) + '">Deal: ' + num(deal, 2) + "</text></svg></div>" +
+      '<p class="note">' + L.ffNote + "</p>";
+    return s;
+  }
+
+  function rStruktur() {
+    var s = D.struktur;
+    function su(list, title) {
+      var sum = list.reduce(function (a, b) { return a + b.betrag; }, 0);
+      return '<div class="panel min0"><h3>' + title + '</h3><div class="tbl-wrap"><table class="num"><tbody>' +
+        list.map(function (l) { return "<tr><td>" + t(l.posten) + "</td><td>" + mrd(l.betrag, 3) + "</td></tr>"; }).join("") +
+        '<tr class="sum"><td>' + L.total + "</td><td>" + mrd(sum, 3) + "</td></tr></tbody></table></div></div>";
+    }
+    var own = '<div class="own">' + s.eigentum.map(function (e, i) {
+      return '<div class="own-seg s' + i + '" style="flex:' + e.anteil + '"><span>' + t(e.name) + " " + e.anteil + L.pctSp + "</span></div>";
+    }).join("") + "</div>";
+    return '<div class="cols">' + su(s.mittelverwendung, L.uses) + su(s.mittelherkunft, L.sources) + "</div>" +
+      '<h3 class="h-sub">' + L.ownership + '</h3><div class="panel">' + own + "</div>" +
+      '<h3 class="h-sub">' + L.mechanics + '</h3><ul class="list">' + s.punkte.map(function (p) { return "<li>" + t(p) + "</li>"; }).join("") + "</ul>" +
+      quelle(s.quelle);
+  }
+
+  function rRisiken() {
+    return '<div class="grid-2">' + D.risiken.map(function (r) {
+      return '<div class="panel risk"><div class="risk-h"><h4>' + t(r.titel) + '</h4><span class="pill ' + esc(r.stufe) + '">' + esc(L.risk[r.stufe] || r.stufe) + "</span></div><p>" + t(r.text) + "</p></div>";
+    }).join("") + "</div>" + quelle(D.risikenQuelle);
+  }
+
+  function rFazit() {
+    var f = D.fazit;
+    return '<p class="prose big">' + t(f.kernaussage) + '</p><ul class="list">' + f.punkte.map(function (p) { return "<li>" + t(p) + "</li>"; }).join("") +
+      '</ul><div class="panel lookback"><h3>' + L.lookback + ' <span class="stamp post">ex post</span></h3><p>' + t(f.rueckblick) + "</p></div>" +
+      '<div class="panel"><h3>' + L.learnings + "</h3><p>" + t(f.learnings) + "</p></div>";
+  }
+
+  /* ---------- Sprache ---------- */
+  function getLang() {
+    var m = /[?&]lang=(de|en)/.exec(location.search);
+    if (m) return m[1];
+    try { var s = localStorage.getItem("venezia-lang"); if (s === "de" || s === "en") return s; } catch (e) {}
+    return "de";
+  }
+  function setLang(l) {
+    lang = l; D = l === "en" ? window.DEAL_EN : window.DEAL_DE; L = UI[l];
+    document.documentElement.lang = l;
+    try { localStorage.setItem("venezia-lang", l); } catch (e) {}
+    document.getElementById("brand").textContent = D.meta.projektname;
+    document.getElementById("foot").innerHTML = t(D.meta.autor) + " · " + t(D.meta.anlass) + " · " + L.footer;
+    document.getElementById("lang").innerHTML = ["de", "en"].map(function (k) {
+      return '<button type="button" data-l="' + k + '"' + (k === l ? ' aria-pressed="true"' : ' aria-pressed="false"') + ">" + k.toUpperCase() + "</button>";
+    }).join("");
+    show(true);
+  }
+  document.getElementById("lang").addEventListener("click", function (e) {
+    var b = e.target.closest("button[data-l]");
+    if (b && b.getAttribute("data-l") !== lang) setLang(b.getAttribute("data-l"));
+  });
+
+  /* ---------- Router ---------- */
+  function nav(active, SEC) {
+    document.getElementById("nav").innerHTML = SEC.map(function (s) {
+      return '<a href="#' + s.id + '"' + (s.id === active ? ' aria-current="page"' : "") + ">" + esc(s.titel) + "</a>";
+    }).join("");
+  }
+  function show(keepScroll) {
+    var SEC = sections();
+    var id = (location.hash || "").slice(1);
+    var idx = -1;
+    SEC.forEach(function (s, i) { if (s.id === id) idx = i; });
+    nav(idx >= 0 ? id : "", SEC);
+    if (idx < 0) { app.innerHTML = rLanding(); document.title = D.meta.projektname; }
+    else {
+      var s = SEC[idx], prev = SEC[idx - 1], next = SEC[idx + 1];
+      app.innerHTML = '<div class="wrap page"><p class="crumb"><a href="#start">Start</a> / ' + L.crumbOf(idx + 1, SEC.length) + "</p>" +
+        "<h1 class=\"h-page\">" + esc(s.titel) + "</h1>" + s.render() +
+        '<nav class="pager">' + (prev ? '<a href="#' + prev.id + '">← ' + esc(prev.titel) + "</a>" : '<a href="#start">← Start</a>') +
+        (next ? '<a href="#' + next.id + '">' + esc(next.titel) + " →</a>" : '<a href="#start">' + L.home + " →</a>") + "</nav></div>";
+      document.title = s.titel + " · " + D.meta.projektname;
+    }
+    if (keepScroll !== true) window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", function () { show(); });
+  setLang(getLang());
+})();
+</script>
+</body>
+</html>
